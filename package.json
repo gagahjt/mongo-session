@@ -1,0 +1,48 @@
+{
+  "name": "mongo-session",
+  "version": "0.2.15",
+  "description": "MongoDB session store for Connect",
+  "keywords": [
+    "connect",
+    "mongo",
+    "mongodb",
+    "session",
+    "express"
+  ],
+  "author": {
+    "name": "gagahjt",
+    "email": "hjt2009@foxmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gagahjt/mongo-session.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gagahjt/mongo-session/issues"
+  },
+  "dependencies": {
+    "mongodb": "1.3.12"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "devDependencies": {
+    "mocha": "1.x",
+    "connect": ">= 1.x",
+    "mongoose": ">= 2.6.x"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "main": "./lib/mongo-session",
+  "engines": "node >= 0.4.x",
+  "readmeFilename": "Readme.md",
+  "dist": {
+    "shasum": ""
+  },
+  "_from": "mongo-session@>=0.2.15",
+  "_resolved": "",
+  "license": "gagahjt",
+  "readme": "# mongo-session\n\n  MongoDB session store for Connect  (can use replica set with mongo)\n\n\n## Installation\n\nmongo-session supports only connect `>= 1.0.3`.\n\nvia npm:\n\n    $ npm install mongo-session\n\n## Options\n    dbobj: null,    /*Mongo Replica set or Db(object)(if ==null please set (host/port)config)*/\r\n    host: '127.0.0.1',\r\n    port: 27017,\r\n    stringify: true,\r\n    collection: 's_sessions',\r\n    auto_reconnect: false,\r\n    native_parser: false,\r\n    w: 1\n\n\n\n\n## Example\n\nWith express:\n\n####ReplSet\r\n\r\nvar mongodb = require('mongodb')\r\n  , Db = mongodb.Db\r\n  , Server = mongodb.Server\r\n  , ReplSet = mongodb.ReplSet;\r\n var replSet = ReplSet(\r\n\t[\r\n\tnew Server(\"1270.0.0.1\", 27017, { auto_reconnect: true }),   // Primary\r\n\tnew Server(\"1270.0.0.1\", 27027, { auto_reconnect: true }),   // Secondary\r\n\tnew Server(\"1270.0.0.1\", 27037, { auto_reconnect: true })    // Secondary\r\n\t],\r\n\t{ rs_name: \"imchat\", read_secondary: true }\r\n\t);\r\nvar dbs = new Db(\"imchatdb\", replSet, { native_parser: true, w: 1 });\r\n\r\nvar storeMongo = new MongoStore({\r\n    dbobj: dbs,  /*Mongo Replica set or Db(object)*/\r\n    //db: settings.db,\r\n    //host: settings.dbhost,\r\n    //port: settings.dbport,\r\n    collection: \"s_session\",\r\n    native_parser: true\r\n\r\n}, function () {\r\n    console.log('connect mongodb success...');\r\n}, null);\r\n\n\nWith connect:\n\n    var connect = require('connect');\n    var MongoStore = require('mongo-session')(connect);\n\n## Removing expired sessions\n\n  mongo-session uses MongoDB's TTL collection feature (2.2+) to\n  have mongod automatically remove expired sessions. (mongod runs this\n  check every minute.)\n\n  **Note:** By connect/express's default, session cookies are set to \n  expire when the user closes their browser (maxAge: null). In accordance\n  with standard industry practices, mongo-session will set these sessions\n  to expire two weeks from their last 'set'. You can override this \n  behavior by manually setting the maxAge for your cookies -- just keep in\n  mind that any value less than 60 seconds is pointless, as mongod will\n  only delete expired documents in a TTL collection every minute.\n\n\n\n## Tests\n\n   see the test.js(You need to add a requested page into it and test)\n\n## License \n\n\n\nCopyright (c) 2011 gagahjt\n",
+  "_id": "mongo-session@0.2.15"
+}
